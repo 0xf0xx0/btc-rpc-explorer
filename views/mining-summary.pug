@@ -142,7 +142,7 @@ block endOfBody
 				if (a.status !== 200) {
 					clearInterval(statusInterval)
 					console.error(a,b,c)
-					$(".loading-error").html(`<h6 class='mt-4 text-danger'>Failed loading mempool:</h6><pre><code class='json'>${a.statusText}</code></pre><pre><code class='json'>${JSON.stringify(a)}</code></pre>`);
+					//$(".loading-error").html(`<h6 class='mt-4 text-danger'>Failed loading mempool:</h6><pre><code class='json'>${a.statusText}</code></pre><pre><code class='json'>${JSON.stringify(a)}</code></pre>`);
 				}
 			}).always(() => {
 			});
@@ -151,7 +151,7 @@ block endOfBody
 		function loadMiningData(startBlock, endBlock) {
 			statusId = Math.random().toString(36).substr(2, 5);
 
-			statusInterval = setInterval(function() { updateStatus(); }, 15);
+			statusInterval = setInterval(function() { updateStatus(); }, 1500);
 
 			$.ajax({
 				url: `./internal-api/build-mining-summary/${startBlock}/${endBlock}?statusId=${statusId}`
