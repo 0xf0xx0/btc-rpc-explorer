@@ -327,9 +327,12 @@ async function noTxIndexTransactionLookup(txid, walletOnly) {
 	}
 
 	// Try looking up in wallet transactions
-	for (let wallet of await listWallets()) {
-		try { return await getWalletTransaction(wallet, txid); }
-		catch (_) {}
+	const wallets = await listWallets()
+	if (wallets) { // if the rpc call doesnt exist, listWallets returns undefined
+		for (let wallet of wallets) {
+			try { return await getWalletTransaction(wallet, txid); }
+			catch (_) {}
+		}	
 	}
 
 	// Try looking up in recent blocks
@@ -524,6 +527,12 @@ function getRpcDataWithParams(request, verifyingConnection=false) {
 			try {
 				const rpcResult = await client.request(request.method, request.parameters);
 				const result = rpcResult.result;
+				
+				if (rpcResult.error) {
+					debugLog(`RpcErrorResult-03: request=${JSON.stringify(request)}, result=${JSON.stringify(rpcResult)}`)
+					throw new Error(`RpcError: type=errorResponse-03`);
+				}
+
 
 				//console.log(`RPC: request=${request}, result=${JSON.stringify(result)}`);
 
@@ -533,18 +542,18 @@ function getRpcDataWithParams(request, verifyingConnection=false) {
 					if (result0 && result0.name && result0.name == "RpcError") {
 						logStats(request.method, true, new Date().getTime() - startTime, false);
 
-						debugLog("RpcErrorResult-03: request=" + JSON.stringify(request) + ", result=" + JSON.stringify(result0));
+						debugLog("RpcErrorResult-04: request=" + JSON.stringify(request) + ", result=" + JSON.stringify(result0));
 
-						throw new Error(`RpcError: type=errorResponse-03`);
+						throw new Error(`RpcError: type=errorResponse-04`);
 					}
 				}
 
 				if (result && result.name && result.name == "RpcError") {
 					logStats(request.method, true, new Date().getTime() - startTime, false);
 
-					debugLog("RpcErrorResult-04: " + JSON.stringify(result));
+					debugLog("RpcErrorResult-05: " + JSON.stringify(result));
 
-					throw new Error(`RpcError: type=errorResponse-04`);
+					throw new Error(`RpcError: type=errorResponse-05`);
 				}
 
 				resolve(result);

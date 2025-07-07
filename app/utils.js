@@ -961,7 +961,7 @@ const reflectPromise = p => p.then(v => ({v, status: "resolved" }),
 global.errorStats = {};
 
 function logError(errorId, err, optionalUserData = {}, logStacktrace=true) {
-	debugErrorLog("Error " + errorId + ": " + err + ", json: " + JSON.stringify(err) + (optionalUserData != null ? (", userData: " + optionalUserData + " (json: " + JSON.stringify(optionalUserData) + ")") : ""));
+	debugErrorLog("Error " + errorId + ": " + err.stack + ", json: " + JSON.stringify(err) + (optionalUserData != null ? (", userData: " + optionalUserData + " (json: " + JSON.stringify(optionalUserData) + ")") : ""));
 	
 	if (err && err.stack && logStacktrace) {
 		debugErrorVerboseLog("Stack: " + err.stack);
